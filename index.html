@@ -1,956 +1,541 @@
-<!-- =========================
-의리T와 함께하는 도덕 토론 발전소
-최종 통합 버전
-========================= -->
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생각이 자라는 도덕 교실 🌱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pastel-yellow': '#FFF9C4',
+                        'pastel-green': '#C8E6C9',
+                        'pastel-blue': '#B3E5FC',
+                        'pastel-pink': '#F8BBD0',
+                        'soft-gray': '#F5F5F5',
+                        'text-main': '#4A4A4A',
+                    },
+                    fontFamily: {
+                        'sans': ['"Pretendard"', '"Apple SD Gothic Neo"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            color: #4A4A4A;
+            background-color: #FAFAFA;
+            scroll-behavior: smooth;
+        }
 
-<title>의리T와 함께하는 도덕 토론 발전소</title>
+        /* 부드러운 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F5F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
 
-<script src="https://cdn.tailwindcss.com"></script>
+        /* 카드 호버 효과 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
 
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
-
-<link
-rel="stylesheet"
-href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-/>
-
-<style>
-
-body{
-  font-family:'Pretendard',sans-serif;
-  background:#f8fafc;
-}
-
-.seat-badge{
-  animation:pop .3s ease;
-}
-
-@keyframes pop{
-  from{
-    opacity:0;
-    transform:scale(.7);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-.flip-wrap{
-  perspective:1000px;
-}
-
-.flip-inner{
-  position:relative;
-  width:100%;
-  height:100%;
-  transition:transform .8s;
-  transform-style:preserve-3d;
-}
-
-.flip-inner.active{
-  transform:rotateY(180deg);
-}
-
-.flip-front,
-.flip-back{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  border-radius:2rem;
-}
-
-.flip-back{
-  transform:rotateY(180deg);
-}
-
-</style>
+        /* 말풍선 꼬리 */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #FFF9C4 transparent transparent transparent;
+            display: block;
+            width: 0;
+        }
+        
+        /* 모달 트랜지션 */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 300ms, transform 300ms;
+        }
+    </style>
 </head>
-
-<body class="pb-24">
-
-<!-- =========================
-HEADER
-========================= -->
-
-<header class="bg-white shadow sticky top-0 z-50">
-
-<div class="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
-
-<div class="flex items-center gap-4">
-
-<div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl">
-<i class="fa-solid fa-scale-balanced"></i>
-</div>
-
-<div>
-<h1 class="text-3xl font-black text-indigo-700">
-의리T와 함께하는 도덕 토론 발전소
-</h1>
-
-<p class="text-slate-500 font-bold mt-1">
-논리와 경청으로 성장하는 토론 교실
-</p>
-</div>
-
-</div>
-
-<button
-id="adminBtn"
-class="w-12 h-12 rounded-full hover:bg-slate-100"
->
-<i class="fa-solid fa-gear text-xl text-slate-600"></i>
-</button>
-
-</div>
-</header>
-
-<!-- =========================
-학생 로그인
-========================= -->
-
-<section
-id="loginSection"
-class="max-w-xl mx-auto mt-14 bg-white rounded-[2rem] shadow-xl p-10"
->
-
-<h2 class="text-3xl font-black text-center mb-8">
-학생 로그인
-</h2>
-
-<div class="space-y-5">
-
-<input
-id="loginName"
-type="text"
-placeholder="이름 입력"
-class="w-full rounded-2xl border p-5 text-lg"
-/>
-
-<input
-id="loginCode"
-type="password"
-placeholder="고유번호 입력"
-class="w-full rounded-2xl border p-5 text-lg"
-/>
-
-<button
-onclick="studentLogin()"
-class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-2xl text-xl font-black"
->
-로그인하기
-</button>
-
-</div>
-
-</section>
-
-<!-- =========================
-메인 콘텐츠
-========================= -->
-
-<main
-id="mainContent"
-class="hidden max-w-7xl mx-auto px-4 mt-10 space-y-20"
->
-
-<!-- 환영 -->
-
-<div class="bg-indigo-600 text-white rounded-3xl p-8 text-center">
-
-<h2
-id="welcomeText"
-class="text-3xl font-black"
->
-환영합니다
-</h2>
-
-</div>
-
-<!-- =========================
-토론 역할
-========================= -->
-
-<section>
-
-<h2 class="text-3xl font-black mb-8">
-토론 역할 탐색
-</h2>
-
-<div class="grid lg:grid-cols-3 gap-8">
-
-<!-- 찬성 -->
-
-<div class="flip-wrap h-80 cursor-pointer">
-
-<div class="flip-inner">
-
-<div class="flip-front bg-blue-600 text-white p-8 flex flex-col justify-center items-center">
-
-<i class="fa-solid fa-thumbs-up text-5xl mb-5"></i>
-
-<h3 class="text-3xl font-black">
-찬성 팀
-</h3>
-
-</div>
-
-<div class="flip-back bg-white border-4 border-blue-500 p-8">
-
-<h3 class="font-black text-2xl text-blue-700 mb-5">
-세부 역할
-</h3>
-
-<div class="space-y-3 font-bold">
-<div>✅ 입론 담당</div>
-<div>✅ 교차조사 담당</div>
-<div>✅ 반론 담당</div>
-<div>✅ 자료조사 담당</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- 반대 -->
-
-<div class="flip-wrap h-80 cursor-pointer">
-
-<div class="flip-inner">
-
-<div class="flip-front bg-rose-600 text-white p-8 flex flex-col justify-center items-center">
-
-<i class="fa-solid fa-thumbs-down text-5xl mb-5"></i>
-
-<h3 class="text-3xl font-black">
-반대 팀
-</h3>
-
-</div>
-
-<div class="flip-back bg-white border-4 border-rose-500 p-8">
-
-<h3 class="font-black text-2xl text-rose-700 mb-5">
-세부 역할
-</h3>
-
-<div class="space-y-3 font-bold">
-<div>✅ 입론 담당</div>
-<div>✅ 교차조사 담당</div>
-<div>✅ 반론 담당</div>
-<div>✅ 자료조사 담당</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- 판정단 -->
-
-<div class="flip-wrap h-80 cursor-pointer">
-
-<div class="flip-inner">
-
-<div class="flip-front bg-amber-500 text-white p-8 flex flex-col justify-center items-center">
-
-<i class="fa-solid fa-scale-balanced text-5xl mb-5"></i>
-
-<h3 class="text-3xl font-black">
-판정단
-</h3>
-
-</div>
-
-<div class="flip-back bg-white border-4 border-amber-500 p-8">
-
-<h3 class="font-black text-2xl text-amber-700 mb-5">
-세부 역할
-</h3>
-
-<div class="space-y-3 font-bold">
-<div>✅ 토론 태도 평가</div>
-<div>✅ 핵심 주장 정리</div>
-<div>✅ 최종 판정 발표</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =========================
-신청 폼
-========================= -->
-
-<section>
-
-<div
-id="formSection"
-class="bg-white rounded-[3rem] shadow-xl p-10"
->
-
-<h2 class="text-3xl font-black mb-8">
-토론 역할 신청
-</h2>
-
-<div class="grid lg:grid-cols-3 gap-6 mb-8">
-
-<select
-id="role1"
-onchange="updateRoleOptions()"
-class="rounded-2xl border p-5 font-bold"
->
-<option value="">1지망 선택</option>
-<option value="찬성">찬성</option>
-<option value="반대">반대</option>
-<option value="판정단">판정단</option>
-</select>
-
-<select
-id="role2"
-onchange="updateRoleOptions()"
-class="rounded-2xl border p-5 font-bold"
->
-<option value="">2지망 선택</option>
-<option value="찬성">찬성</option>
-<option value="반대">반대</option>
-<option value="판정단">판정단</option>
-</select>
-
-<select
-id="role3"
-onchange="updateRoleOptions()"
-class="rounded-2xl border p-5 font-bold"
->
-<option value="">3지망 선택</option>
-<option value="찬성">찬성</option>
-<option value="반대">반대</option>
-<option value="판정단">판정단</option>
-</select>
-
-</div>
-
-<button
-onclick="submitApplication()"
-class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-2xl text-xl font-black"
->
-참가 신청하기 🚀
-</button>
-
-</div>
-
-<!-- 신청 완료 -->
-
-<div
-id="successBox"
-class="hidden bg-emerald-500 text-white rounded-[3rem] p-14 text-center shadow-2xl"
->
-
-<i class="fa-solid fa-circle-check text-7xl mb-6"></i>
-
-<h2 class="text-4xl font-black mb-4">
-신청 완료!
-</h2>
-
-<p class="text-xl font-bold">
-의리T가 모둠을 배정하고 있어요 😊
-</p>
-
-</div>
-
-</section>
-
-<!-- =========================
-배치도
-========================= -->
-
-<section>
-
-<h2 class="text-3xl font-black mb-8">
-토론 모둠 배치도
-</h2>
-
-<div class="bg-slate-900 rounded-[4rem] p-10">
-
-<div class="w-52 bg-white rounded-b-3xl mx-auto py-4 text-center font-black text-xl mb-16">
-칠판
-</div>
-
-<div class="grid lg:grid-cols-[1fr_300px_1fr] gap-10">
-
-<!-- 찬성 -->
-
-<div>
-
-<div class="bg-blue-500/20 text-blue-300 py-4 rounded-2xl text-center font-black text-xl mb-6">
-👍 찬성 팀 진영
-</div>
-
-<div class="space-y-4">
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="agree1" class="flex flex-wrap gap-3"></div>
-</div>
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="agree2" class="flex flex-wrap gap-3"></div>
-</div>
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="agree3" class="flex flex-wrap gap-3"></div>
-</div>
-
-</div>
-
-</div>
-
-<!-- 중앙 통로 -->
-
-<div class="hidden lg:flex items-center justify-center">
-
-<div class="text-center text-slate-400 font-black text-xl leading-relaxed">
-교실 중앙 통로
-<br><br>
-서로 마주보며 토론!
-</div>
-
-</div>
-
-<!-- 반대 -->
-
-<div>
-
-<div class="bg-rose-500/20 text-rose-300 py-4 rounded-2xl text-center font-black text-xl mb-6">
-👎 반대 팀 진영
-</div>
-
-<div class="space-y-4">
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="oppose1" class="flex flex-wrap gap-3 justify-end"></div>
-</div>
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="oppose2" class="flex flex-wrap gap-3 justify-end"></div>
-</div>
-
-<div class="bg-white/10 rounded-2xl min-h-[100px] p-4">
-<div id="oppose3" class="flex flex-wrap gap-3 justify-end"></div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- 판정단 -->
-
-<div class="mt-16">
-
-<div class="bg-amber-500/20 text-amber-300 py-4 rounded-2xl text-center font-black text-xl mb-6">
-⚖️ 판정단
-</div>
-
-<div
-id="judgeSeat"
-class="bg-white/10 rounded-2xl min-h-[100px] p-4 flex flex-wrap gap-3 items-start"
->
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-</main>
-
-<!-- =========================
-관리자 모드
-========================= -->
-
-<section
-id="adminPanel"
-class="hidden fixed inset-0 bg-black/50 z-[100] overflow-y-auto"
->
-
-<div class="max-w-4xl mx-auto my-10 bg-white rounded-[3rem] p-10">
-
-<div class="flex justify-between items-center mb-8">
-
-<h2 class="text-3xl font-black">
-의리T 관리 모드
-</h2>
-
-<button
-onclick="closeAdmin()"
-class="text-rose-500 font-black"
->
-닫기
-</button>
-
-</div>
-
-<div
-id="applicationList"
-class="space-y-5"
->
-</div>
-
-</div>
-
-</section>
-
-<!-- =========================
-관리자 비밀번호
-========================= -->
-
-<div
-id="pwModal"
-class="hidden fixed inset-0 bg-black/50 z-[200] flex items-center justify-center"
->
-
-<div class="bg-white rounded-[3rem] p-10 w-full max-w-md">
-
-<h2 class="text-3xl font-black text-center mb-8">
-관리자 로그인
-</h2>
-
-<input
-id="pwInput"
-type="password"
-placeholder="비밀번호 입력"
-class="w-full border rounded-2xl p-5 mb-6"
-/>
-
-<button
-onclick="adminLogin()"
-class="w-full bg-indigo-600 text-white py-5 rounded-2xl text-xl font-black"
->
-로그인
-</button>
-
-</div>
-
-</div>
-
-<script>
-
-/* =========================
-APPS SCRIPT URL
-========================= */
-
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyirqUsis6XfV9ABGUHAhacoygyIzhURcCnxTjFJhUGIRb537M6rTEl-vsg05CyxabC/exec";
-
-/* =========================
-학생 데이터
-========================= */
-
-const students = [
-
-{name:"김민준",code:"1001"},
-{name:"이서연",code:"1002"},
-{name:"박지후",code:"1003"},
-{name:"최하린",code:"1004"}
-
-];
-
-/* =========================
-STATE
-========================= */
-
-let currentStudent = null;
-let applications = [];
-let isAdmin = false;
-
-/* =========================
-카드 뒤집기
-========================= */
-
-document.querySelectorAll(".flip-wrap").forEach(card=>{
-
-card.addEventListener("click",()=>{
-
-card.querySelector(".flip-inner")
-.classList.toggle("active");
-
-});
-
-});
-
-/* =========================
-학생 로그인
-========================= */
-
-function studentLogin(){
-
-const name =
-document.getElementById("loginName").value.trim();
-
-const code =
-document.getElementById("loginCode").value.trim();
-
-const student =
-students.find(s=>
-s.name===name && s.code===code
-);
-
-if(!student){
-
-alert("이름 또는 고유번호가 올바르지 않습니다.");
-return;
-
-}
-
-currentStudent = student;
-
-document.getElementById("loginSection")
-.classList.add("hidden");
-
-document.getElementById("mainContent")
-.classList.remove("hidden");
-
-document.getElementById("welcomeText")
-.innerText =
-`${student.name} 학생 환영합니다 😊`;
-
-}
-
-/* =========================
-중복 선택 방지
-========================= */
-
-function updateRoleOptions(){
-
-const selects = [
-document.getElementById("role1"),
-document.getElementById("role2"),
-document.getElementById("role3")
-];
-
-const values =
-selects.map(s=>s.value).filter(v=>v);
-
-selects.forEach(select=>{
-
-const current = select.value;
-
-Array.from(select.options).forEach(option=>{
-
-if(option.value===""){
-option.disabled=false;
-return;
-}
-
-option.disabled =
-values.includes(option.value)
-&& option.value !== current;
-
-});
-
-});
-
-}
-
-/* =========================
-이미 신청 여부
-========================= */
-
-function alreadyApplied(name){
-
-return applications.some(app =>
-app.name === name
-);
-
-}
-
-/* =========================
-신청
-========================= */
-
-async function submitApplication(){
-
-if(!currentStudent){
-
-alert("로그인이 필요합니다.");
-return;
-
-}
-
-const role1 =
-document.getElementById("role1").value;
-
-const role2 =
-document.getElementById("role2").value;
-
-const role3 =
-document.getElementById("role3").value;
-
-if(!role1 || !role2 || !role3){
-
-alert("모든 지망을 선택해주세요.");
-return;
-
-}
-
-if(alreadyApplied(currentStudent.name)){
-
-alert("이미 신청을 완료했습니다.");
-return;
-
-}
-
-const data = {
-
-name:currentStudent.name,
-code:currentStudent.code,
-role1,
-role2,
-role3
-
-};
-
-applications.push(data);
-
-localStorage.setItem(
-"debateApplied",
-currentStudent.name
-);
-
-await saveToSheet(data);
-
-renderApplications();
-
-document.getElementById("formSection")
-.classList.add("hidden");
-
-document.getElementById("successBox")
-.classList.remove("hidden");
-
-}
-
-/* =========================
-구글시트 저장
-========================= */
-
-async function saveToSheet(data){
-
-try{
-
-await fetch(SCRIPT_URL,{
-
-method:"POST",
-mode:"no-cors",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-type:"application",
-data:data
-})
-
-});
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-/* =========================
-관리자 신청 목록
-========================= */
-
-function renderApplications(){
-
-const list =
-document.getElementById("applicationList");
-
-list.innerHTML = "";
-
-applications.forEach(app=>{
-
-const div =
-document.createElement("div");
-
-div.className =
-"bg-indigo-50 rounded-3xl p-6";
-
-div.innerHTML = `
-
-<div class="font-black text-2xl mb-4">
-${app.name}
-</div>
-
-<div class="space-y-2 mb-5 font-bold">
-
-<div>1지망 : ${app.role1}</div>
-<div>2지망 : ${app.role2}</div>
-<div>3지망 : ${app.role3}</div>
-
-</div>
-
-<select
-onchange="assignSeat('${app.name}',this.value)"
-class="w-full border rounded-2xl p-4 font-bold"
->
-
-<option value="">모둠 배정 선택</option>
-
-<option value="agree1">찬성 1모둠</option>
-<option value="agree2">찬성 2모둠</option>
-<option value="agree3">찬성 3모둠</option>
-
-<option value="oppose1">반대 1모둠</option>
-<option value="oppose2">반대 2모둠</option>
-<option value="oppose3">반대 3모둠</option>
-
-<option value="judgeSeat">판정단</option>
-
-</select>
-
-`;
-
-list.appendChild(div);
-
-});
-
-}
-
-/* =========================
-자리 배정
-========================= */
-
-function assignSeat(name,targetId){
-
-if(!targetId) return;
-
-document
-.querySelectorAll(".seat-student")
-.forEach(el=>{
-
-if(el.dataset.name === name){
-
-el.remove();
-
-}
-
-});
-
-const target =
-document.getElementById(targetId);
-
-const badge =
-document.createElement("div");
-
-badge.dataset.name = name;
-
-badge.className =
-"seat-student seat-badge h-[52px] px-5 rounded-xl bg-white text-slate-900 font-black shadow-lg flex items-center";
-
-badge.innerText = name;
-
-target.appendChild(badge);
-
-}
-
-/* =========================
-관리자
-========================= */
-
-document.getElementById("adminBtn")
-.onclick = ()=>{
-
-if(isAdmin){
-
-document.getElementById("adminPanel")
-.classList.remove("hidden");
-
-}else{
-
-document.getElementById("pwModal")
-.classList.remove("hidden");
-
-}
-
-};
-
-function adminLogin(){
-
-const pw =
-document.getElementById("pwInput").value;
-
-if(pw === "1234"){
-
-isAdmin = true;
-
-document.getElementById("pwModal")
-.classList.add("hidden");
-
-document.getElementById("adminPanel")
-.classList.remove("hidden");
-
-}else{
-
-alert("비밀번호가 올바르지 않습니다.");
-
-}
-
-}
-
-function closeAdmin(){
-
-document.getElementById("adminPanel")
-.classList.add("hidden");
-
-}
-
-/* =========================
-새로고침 대응
-========================= */
-
-window.onload = ()=>{
-
-const applied =
-localStorage.getItem("debateApplied");
-
-if(applied){
-
-document.getElementById("formSection")
-.classList.add("hidden");
-
-document.getElementById("successBox")
-.classList.remove("hidden");
-
-}
-
-};
-
-</script>
-
+<body class="antialiased overflow-x-hidden relative">
+
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 cursor-pointer" onclick="scrollToTop()">
+                    <span class="text-2xl font-bold text-gray-800">🌱 생각의 숲</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#about" class="hover:text-pastel-green px-3 py-2 rounded-md text-sm font-medium transition-colors">인사말</a>
+                        <a href="#class" class="hover:text-pastel-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">도덕 수업</a>
+                        <a href="#club" class="hover:text-pastel-pink px-3 py-2 rounded-md text-sm font-medium transition-colors">동아리</a>
+                        <a href="#contact" class="hover:text-pastel-yellow px-3 py-2 rounded-md text-sm font-medium transition-colors">소통하기</a>
+                    </div>
+                </div>
+                <!-- 모바일 메뉴 버튼 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-800 hover:text-pastel-green focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 모바일 메뉴 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-md absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-pastel-green/20">인사말</a>
+                <a href="#class" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-pastel-blue/20">도덕 수업</a>
+                <a href="#club" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-pastel-pink/20">동아리</a>
+                <a href="#contact" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-pastel-yellow/20">소통하기</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-b from-pastel-yellow/30 to-white">
+        <!-- 배경 장식 요소 -->
+        <div class="absolute top-20 left-10 text-4xl animate-float opacity-50">☁️</div>
+        <div class="absolute top-40 right-20 text-3xl animate-float opacity-50" style="animation-delay: 1s;">🎈</div>
+        <div class="absolute bottom-20 left-1/4 text-2xl animate-float opacity-50" style="animation-delay: 2s;">✨</div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-block relative">
+                <div class="w-32 h-32 md:w-40 md:h-40 bg-pastel-green rounded-full mx-auto flex items-center justify-center text-6xl shadow-lg border-4 border-white animate-bounce-slow cursor-pointer" onclick="playGreeting()" id="teacher-avatar">
+                    👩‍🏫
+                </div>
+                <div id="greeting-bubble" class="absolute top-0 right-[-100px] bg-white px-4 py-2 rounded-2xl shadow-md text-sm font-bold text-gray-700 opacity-0 transition-opacity duration-300 pointer-events-none transform -translate-y-full">
+                    안녕! 반가워요 👋
+                </div>
+            </div>
+            
+            <h1 class="mt-8 text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                생각의 깊이를 더하고,<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">세상을 다르게 보는 곳</span>
+            </h1>
+            <p class="mt-6 text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                정답을 외우는 것이 아니라, <strong>'생각하는 힘'</strong>을 기르는 시간.<br>
+                여러분과 함께 성장하는 도덕 선생님입니다.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#class" class="bg-pastel-green hover:bg-green-300 text-gray-800 font-bold py-3 px-8 rounded-full shadow-md transition-transform transform hover:-translate-y-1">
+                    수업 구경하기 📚
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="class" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-pastel-blue font-bold tracking-wider uppercase text-sm">Moral Education</span>
+                <h2 class="mt-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
+                    우리의 도덕 수업은 달라요
+                </h2>
+                <div class="mt-4 w-20 h-1 bg-pastel-blue mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 특징 1 -->
+                <div class="bg-soft-gray rounded-3xl p-8 card-hover text-center relative overflow-hidden group cursor-pointer" onclick="openModal('modal-book')">
+                    <div class="absolute inset-0 bg-pastel-blue/20 transform scale-0 group-hover:scale-100 transition-transform duration-300 rounded-3xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="text-5xl mb-4">📖</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">책과 함께하는 사유</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            교과서만 읽지 않아요. 흥미로운 주제의 책을 함께 읽으며, 그 속에 담긴 의미를 깊이 있게 탐구합니다.
+                        </p>
+                        <div class="mt-4 text-pastel-blue font-semibold text-sm">자세히 보기 &rarr;</div>
+                    </div>
+                </div>
+
+                <!-- 특징 2 -->
+                <div class="bg-soft-gray rounded-3xl p-8 card-hover text-center relative overflow-hidden group cursor-pointer" onclick="openModal('modal-debate')">
+                    <div class="absolute inset-0 bg-pastel-yellow/20 transform scale-0 group-hover:scale-100 transition-transform duration-300 rounded-3xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="text-5xl mb-4">🗣️</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">딜레마 토의·토론</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            현실 속 도덕적 딜레마 상황을 마주하고, 끊임없이 질문을 던지며 나와 다른 생각에 귀 기울이는 시간을 가집니다.
+                        </p>
+                         <div class="mt-4 text-yellow-500 font-semibold text-sm">자세히 보기 &rarr;</div>
+                    </div>
+                </div>
+
+                <!-- 특징 3 -->
+                <div class="bg-soft-gray rounded-3xl p-8 card-hover text-center relative overflow-hidden group cursor-pointer" onclick="openModal('modal-value')">
+                    <div class="absolute inset-0 bg-pastel-green/20 transform scale-0 group-hover:scale-100 transition-transform duration-300 rounded-3xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="text-5xl mb-4">💎</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">스스로 찾는 가치</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            정답을 강요하지 않아요. 다양한 의견을 나누는 과정 속에서, 학생 스스로 자신만의 올바른 가치를 발견하도록 돕습니다.
+                        </p>
+                        <div class="mt-4 text-pastel-green font-semibold text-sm">자세히 보기 &rarr;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="club" class="py-20 bg-pastel-pink/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-pastel-pink font-bold tracking-wider uppercase text-sm">Club Activities</span>
+                <h2 class="mt-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
+                    세상을 담는 동아리
+                </h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">수업 시간 밖에서도 우리의 탐구는 계속됩니다!</p>
+                <div class="mt-4 w-20 h-1 bg-pastel-pink mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- 영화감상토론반 -->
+                <div class="order-2 md:order-1 flex justify-center relative">
+                     <div class="w-full max-w-sm aspect-[4/3] bg-gray-200 rounded-3xl shadow-lg overflow-hidden relative group">
+                        <!-- Placeholder for video/image -->
+                        <img src="https://placehold.co/600x450/ffebee/d32f2f?text=Movie+Club" alt="영화 동아리" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                             <div class="text-white text-center">
+                                 <i class="fas fa-play-circle text-5xl mb-2"></i>
+                                 <p class="font-bold">활동 엿보기</p>
+                             </div>
+                        </div>
+                     </div>
+                     <!-- 장식 아이콘 -->
+                     <div class="absolute -top-6 -left-6 text-4xl animate-bounce-slow">🍿</div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-pastel-pink/30 p-2 rounded-lg mr-3">🎬</span> 영화감상토론반
+                    </h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        스크린 속 다채로운 삶의 이야기들을 만납니다. 영화가 던지는 사회적, 도덕적 메시지에 대해 자유롭게 이야기 나누며, 
+                        타인을 이해하고 공감하는 마음을 키우는 동아리입니다. 
+                    </p>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-pink mt-1 mr-2"></i> 매월 주제가 있는 영화 감상</li>
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-pink mt-1 mr-2"></i> 감상 후 심도 있는 자유 토론 진행</li>
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-pink mt-1 mr-2"></i> 학기말 영화 평론 문집 제작</li>
+                    </ul>
+                </div>
+
+                <!-- 영상사진반 -->
+                <div class="mt-12 md:mt-0">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-pastel-blue/30 p-2 rounded-lg mr-3">📸</span> 영상사진반
+                    </h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        스마트폰 렌즈로 우리의 일상을 특별하게 기록합니다. 짧은 영상 제작부터 사진 촬영 기법까지 배우며, 
+                        우리 주변의 아름다움과 때로는 고민스러운 순간들을 나만의 시선으로 담아냅니다.
+                    </p>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-blue mt-1 mr-2"></i> 기초 촬영 및 편집 기술 교육</li>
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-blue mt-1 mr-2"></i> 학교 행사 및 일상 기록 프로젝트</li>
+                        <li class="flex items-start"><i class="fas fa-check text-pastel-blue mt-1 mr-2"></i> 연말 교내 사진전/영상제 개최</li>
+                    </ul>
+                </div>
+                <div class="flex justify-center relative">
+                    <div class="w-full max-w-sm aspect-[4/3] bg-gray-200 rounded-3xl shadow-lg overflow-hidden relative group">
+                        <!-- Placeholder for video/image -->
+                        <img src="https://placehold.co/600x450/e3f2fd/1976d2?text=Photo+Club" alt="사진 동아리" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="text-white text-center">
+                                <i class="fas fa-camera text-5xl mb-2"></i>
+                                <p class="font-bold">갤러리 보기</p>
+                            </div>
+                       </div>
+                    </div>
+                    <!-- 장식 아이콘 -->
+                    <div class="absolute -bottom-6 -right-6 text-4xl animate-bounce-slow" style="animation-delay: 0.5s;">📷</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 relative z-10">
+            <div class="bg-pastel-yellow/40 rounded-3xl p-8 md:p-12 shadow-sm text-center relative border-2 border-pastel-yellow border-dashed">
+                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-5xl bg-white rounded-full p-2">
+                    🤔
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mt-4 mb-2">오늘의 도덕적 질문</h3>
+                <p id="daily-question" class="text-xl text-gray-700 italic my-6 font-medium">
+                    "선의의 거짓말은 언제나 허용될 수 있을까요?"
+                </p>
+                <button onclick="changeQuestion()" class="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2 px-6 rounded-full border border-gray-200 shadow-sm transition-colors text-sm">
+                    다른 질문 보기 <i class="fas fa-sync-alt ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block p-4 bg-white rounded-full shadow-md mb-6 animate-bounce-slow">
+                <span class="text-4xl">💌</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6">선생님과 소통해요</h2>
+            <p class="text-gray-600 mb-10 text-lg">
+                궁금한 점이 있거나, 함께 이야기 나누고 싶은 주제가 있다면 언제든 환영합니다!<br>
+                <span class="text-sm italic block mt-2 text-gray-500">"여러분의 모든 질문은 세상을 더 나은 곳으로 만드는 첫걸음입니다."</span>
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                <a href="#" class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col items-center group border border-gray-100">
+                    <div class="w-12 h-12 bg-pastel-green/30 rounded-full flex items-center justify-center text-green-600 mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-comments text-xl"></i>
+                    </div>
+                    <span class="font-bold text-gray-800 text-sm">질문/상담방</span>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col items-center group border border-gray-100">
+                    <div class="w-12 h-12 bg-pastel-blue/30 rounded-full flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-list-ul text-xl"></i>
+                    </div>
+                    <span class="font-bold text-gray-800 text-sm">추천 도서/영화</span>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col items-center group border border-gray-100">
+                    <div class="w-12 h-12 bg-pastel-pink/30 rounded-full flex items-center justify-center text-pink-600 mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-images text-xl"></i>
+                    </div>
+                    <span class="font-bold text-gray-800 text-sm">학생 갤러리</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-8 border-t border-gray-100">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; 2026 선생님의 생각의 숲. All rights reserved.<br>
+                <span class="text-xs mt-2 inline-block">Designed with care for students.</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- 모달: 책 -->
+    <div id="modal-book" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeModal('modal-book')"></div>
+        <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden relative z-10 transform scale-95 opacity-0 transition-all duration-300" id="modal-book-content">
+            <div class="bg-pastel-blue p-6 text-center relative">
+                <button onclick="closeModal('modal-book')" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 bg-white/50 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-times"></i></button>
+                <div class="text-6xl mb-2">📖</div>
+                <h3 class="text-2xl font-bold text-gray-800">책과 함께하는 사유</h3>
+            </div>
+            <div class="p-8">
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    이번 학기에는 <strong>'정의란 무엇인가(청소년을 위한)'</strong>와 <strong>'동물 해방'</strong> 등의 도서를 함께 읽습니다.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    단순히 내용을 파악하는 것을 넘어, 작가의 의도를 비판적으로 분석하고 현재 우리 사회의 모습과 연결하여 깊이 있게 사유하는 훈련을 합니다. 매주 독서 기록장을 작성하며 자신의 생각이 어떻게 변화하는지 관찰합니다.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달: 토론 -->
+    <div id="modal-debate" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeModal('modal-debate')"></div>
+        <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden relative z-10 transform scale-95 opacity-0 transition-all duration-300" id="modal-debate-content">
+            <div class="bg-pastel-yellow p-6 text-center relative">
+                <button onclick="closeModal('modal-debate')" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 bg-white/50 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-times"></i></button>
+                <div class="text-6xl mb-2">🗣️</div>
+                <h3 class="text-2xl font-bold text-gray-800">딜레마 토의·토론</h3>
+            </div>
+            <div class="p-8">
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    "트로이 목마 딜레마", "하인츠 딜레마" 등 유명한 윤리적 사고 실험부터 최신 인공지능 윤리 문제까지 다양한 상황을 다룹니다.
+                </p>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2 mb-4">
+                    <li>입론, 반론, 재반론으로 이어지는 체계적인 토론 진행</li>
+                    <li>나와 반대되는 입장을 대변해보는 '역할 교환 토론'</li>
+                    <li>승패를 가르기보다 서로의 의견을 조율하는 '합의 형성 토의'</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달: 가치 -->
+    <div id="modal-value" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeModal('modal-value')"></div>
+        <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden relative z-10 transform scale-95 opacity-0 transition-all duration-300" id="modal-value-content">
+            <div class="bg-pastel-green p-6 text-center relative">
+                <button onclick="closeModal('modal-value')" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 bg-white/50 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-times"></i></button>
+                <div class="text-6xl mb-2">💎</div>
+                <h3 class="text-2xl font-bold text-gray-800">스스로 찾는 가치</h3>
+            </div>
+            <div class="p-8">
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    도덕적 지식을 암기하는 것은 진짜 도덕이 아닙니다. 학생들 스스로 자신의 내면을 들여다보고, 자신이 중요하게 생각하는 가치(Value)가 무엇인지 탐색합니다.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    학기 말에는 <strong>'나만의 가치 사전 만들기'</strong> 프로젝트를 통해, 한 학기 동안 배우고 느낀 점을 종합하여 자신만의 철학을 확립하는 시간을 갖습니다.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 스크롤 시 네비게이션 바 스타일 변경
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-sm');
+                nav.classList.remove('bg-transparent');
+            } else {
+                nav.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-sm');
+                nav.classList.add('bg-transparent');
+            }
+        });
+
+        // 모바일 메뉴 토글
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // 모바일 링크 클릭 시 메뉴 닫기
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // 맨 위로 스크롤
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 선생님 아바타 클릭 시 인사말 표시 (귀여운 인터랙션)
+        function playGreeting() {
+            const bubble = document.getElementById('greeting-bubble');
+            const greetings = ["안녕! 반가워요 👋", "오늘도 좋은 하루! ☀️", "무엇이든 물어보세요 🤔", "생각하는 힘을 기르자! 🌱"];
+            
+            bubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+            bubble.classList.remove('opacity-0', '-translate-y-full');
+            bubble.classList.add('opacity-100', '-translate-y-4'); // 말풍선 꼬리 위치 조정
+            
+            // 살짝 흔들리는 효과
+            const avatar = document.getElementById('teacher-avatar');
+            avatar.style.transform = 'scale(1.1) rotate(5deg)';
+            setTimeout(() => { avatar.style.transform = 'scale(1.1) rotate(-5deg)'; }, 100);
+            setTimeout(() => { avatar.style.transform = 'scale(1) rotate(0deg)'; }, 200);
+
+            setTimeout(() => {
+                bubble.classList.remove('opacity-100', '-translate-y-4');
+                bubble.classList.add('opacity-0', '-translate-y-full');
+            }, 2000);
+        }
+
+        // 오늘의 질문 변경 로직
+        const questions = [
+            "선의의 거짓말은 언제나 허용될 수 있을까요?",
+            "법과 도덕 중 무엇이 우선되어야 할까요?",
+            "인공지능에게도 도덕적 책임을 물을 수 있을까요?",
+            "나의 자유가 타인의 피해를 유발한다면 어떻게 해야 할까요?",
+            "우리는 왜 약자를 배려해야 할까요?",
+            "진정한 행복이란 무엇일까요?",
+            "환경 보호를 위해 개인의 편리를 어디까지 희생해야 할까요?"
+        ];
+        
+        function changeQuestion() {
+            const qElement = document.getElementById('daily-question');
+            const icon = document.querySelector('.fa-sync-alt');
+            
+            // 회전 애니메이션
+            icon.style.transition = 'transform 0.5s ease';
+            icon.style.transform = `rotate(${Math.random() * 360 + 360}deg)`;
+            
+            // 페이드 아웃 효과 후 텍스트 변경
+            qElement.style.opacity = 0;
+            setTimeout(() => {
+                let newQ;
+                do {
+                    newQ = questions[Math.floor(Math.random() * questions.length)];
+                } while(newQ === qElement.innerText.replace(/"/g, '')); // 같은 질문 반복 방지
+                
+                qElement.innerHTML = `"${newQ}"`;
+                qElement.style.transition = 'opacity 0.3s ease';
+                qElement.style.opacity = 1;
+            }, 300);
+        }
+
+        // 모달 열기/닫기 로직
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(`${modalId}-content`);
+            
+            modal.classList.remove('hidden');
+            // 약간의 딜레이를 주어 transition이 적용되게 함
+            setTimeout(() => {
+                content.classList.remove('opacity-0', 'scale-95');
+                content.classList.add('opacity-100', 'scale-100');
+            }, 10);
+            
+            // 바디 스크롤 방지
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(`${modalId}-content`);
+            
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // 스크롤 복구
+            }, 300); // transition 시간과 맞춤
+        }
+    </script>
 </body>
 </html>
